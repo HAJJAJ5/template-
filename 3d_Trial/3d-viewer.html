@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer - Interactive GLB Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Canvas container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* Content overlay */
+        .content {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+        }
+
+        .text-content {
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            pointer-events: all;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #f093fb;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+
+        /* Controls panel */
+        .controls-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            pointer-events: all;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Loading screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .text-content {
+                padding: 2rem;
+            }
+
+            .controls-panel {
+                bottom: 10px;
+                padding: 1rem;
+            }
+
+            .control-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <div class="loading-text">Loading 3D Model...</div>
+    </div>
+
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Content Sections -->
+    <div class="content">
+        <section class="section">
+            <div class="text-content">
+                <h1>Interactive 3D Experience</h1>
+                <p>Scroll down to explore the 3D model with stunning animations and dynamic lighting effects.</p>
+                <p>The model rotates, scales, and changes as you navigate through the page.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="text-content">
+                <h2>Scroll-Based Animation</h2>
+                <p>Watch as the 3D model responds to your scrolling, creating an immersive and interactive experience.
+                </p>
+                <p>The lighting dynamically adjusts to enhance the visual appeal.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="text-content">
+                <h2>Premium Design</h2>
+                <p>Featuring smooth transitions, realistic lighting, and professional-grade 3D rendering powered by
+                    Three.js.</p>
+                <p>Use the controls below to interact with the model manually.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="text-content">
+                <h2>Your 3D Showcase</h2>
+                <p>This interactive 3D viewer can be customized for any GLB model, perfect for product showcases,
+                    portfolios, or presentations.</p>
+                <p>Scroll back up to see the animation in reverse!</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Controls Panel -->
+    <div class="controls-panel">
+        <button class="control-btn" id="autoRotateBtn">Toggle Auto-Rotate</button>
+        <button class="control-btn" id="resetBtn">Reset View</button>
+        <button class="control-btn" id="wireframeBtn">Toggle Wireframe</button>
+        <button class="control-btn" id="lightBtn">Change Light</button>
+    </div>
+
+    <!-- Three.js with ES Modules -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = null;
+
+        // Camera setup
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        camera.position.set(0, 1, 5);
+
+        // Renderer setup
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Orbit Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enableZoom = true;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 2;
+
+        // Lighting setup
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 10, 7.5);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        scene.add(directionalLight);
+
+        const pointLight1 = new THREE.PointLight(0x667eea, 2, 50);
+        pointLight1.position.set(-5, 3, 5);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xf093fb, 2, 50);
+        pointLight2.position.set(5, 3, -5);
+        scene.add(pointLight2);
+
+        const rimLight = new THREE.DirectionalLight(0x764ba2, 0.5);
+        rimLight.position.set(-5, 5, -5);
+        scene.add(rimLight);
+
+        // Load GLB model
+        let model;
+        let mixer;
+        const loader = new GLTFLoader();
+
+        loader.load(
+            'module/silksong__hornet_fanart.glb',
+            function (gltf) {
+                model = gltf.scene;
+
+                // Center and scale the model
+                const box = new THREE.Box3().setFromObject(model);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = 2 / maxDim;
+                model.scale.multiplyScalar(scale);
+                model.userData.scale = scale;
+
+                model.position.sub(center.multiplyScalar(scale));
+
+                // Enable shadows
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        child.userData.originalMaterial = child.material;
+                    }
+                });
+
+                // Animation mixer
+                if (gltf.animations.length > 0) {
+                    mixer = new THREE.AnimationMixer(model);
+                    gltf.animations.forEach((clip) => {
+                        mixer.clipAction(clip).play();
+                    });
+                }
+
+                scene.add(model);
+
+                // Hide loading screen
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            },
+            function (xhr) {
+                const percentComplete = (xhr.loaded / xhr.total) * 100;
+                console.log('Model loading: ' + Math.round(percentComplete) + '%');
+            },
+            function (error) {
+                console.error('Error loading model:', error);
+                document.querySelector('.loading-text').textContent = 'Error loading model. Check console for details.';
+            }
+        );
+
+        // Scroll-based animation
+        let scrollProgress = 0;
+
+        window.addEventListener('scroll', () => {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            scrollProgress = window.scrollY / maxScroll;
+
+            if (model) {
+                model.rotation.y = scrollProgress * Math.PI * 4;
+                model.position.y = Math.sin(scrollProgress * Math.PI * 2) * 0.5;
+                model.position.x = Math.cos(scrollProgress * Math.PI * 2) * 0.3;
+
+                const scaleValue = 1 + Math.sin(scrollProgress * Math.PI * 2) * 0.2;
+                const baseScale = model.userData.scale || 1;
+                model.scale.setScalar(baseScale * scaleValue);
+            }
+
+            pointLight1.intensity = 1 + Math.sin(scrollProgress * Math.PI * 4) * 0.5;
+            pointLight2.intensity = 1 + Math.cos(scrollProgress * Math.PI * 4) * 0.5;
+        });
+
+        // Control functions
+        document.getElementById('autoRotateBtn').addEventListener('click', () => {
+            controls.autoRotate = !controls.autoRotate;
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            camera.position.set(0, 1, 5);
+            controls.target.set(0, 0, 0);
+            controls.update();
+        });
+
+        let wireframeMode = false;
+        document.getElementById('wireframeBtn').addEventListener('click', () => {
+            if (!model) return;
+
+            wireframeMode = !wireframeMode;
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    if (wireframeMode) {
+                        child.material = new THREE.MeshBasicMaterial({
+                            color: 0x667eea,
+                            wireframe: true
+                        });
+                    } else {
+                        child.material = child.userData.originalMaterial;
+                    }
+                }
+            });
+        });
+
+        const lightColors = [0x667eea, 0xf093fb, 0x00ff88, 0xff6b6b, 0x4ecdc4];
+        let currentColorIndex = 0;
+
+        document.getElementById('lightBtn').addEventListener('click', () => {
+            currentColorIndex = (currentColorIndex + 1) % lightColors.length;
+            pointLight1.color.setHex(lightColors[currentColorIndex]);
+            pointLight2.color.setHex(lightColors[(currentColorIndex + 2) % lightColors.length]);
+        });
+
+        // Animation loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const delta = clock.getDelta();
+
+            if (mixer) {
+                mixer.update(delta);
+            }
+
+            const time = clock.getElapsedTime();
+            pointLight1.position.x = Math.cos(time * 0.5) * 5;
+            pointLight1.position.z = Math.sin(time * 0.5) * 5;
+
+            pointLight2.position.x = Math.cos(time * 0.5 + Math.PI) * 5;
+            pointLight2.position.z = Math.sin(time * 0.5 + Math.PI) * 5;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>

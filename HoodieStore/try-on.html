@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Try-On - HoodieStore</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .try-on-container {
+            padding: 8rem 2rem 4rem;
+            min-height: 100vh;
+            background: var(--light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .try-on-workspace {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .controls-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--gray);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .hoodie-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .hoodie-option {
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .hoodie-option:hover,
+        .hoodie-option.active {
+            border-color: var(--primary);
+            background: var(--light);
+        }
+
+        .canvas-area {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #userImage {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .draggable-hoodie {
+            position: absolute;
+            width: 300px;
+            cursor: move;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+            touch-action: none;
+        }
+
+        .controls-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: flex;
+            gap: 1rem;
+            color: white;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .control-btn:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 900px) {
+            .try-on-workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .canvas-area {
+                height: 400px;
+                order: -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i data-lucide="shopping-bag"></i> HoodieStore
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="try-on.html" style="color: var(--primary); font-weight: 700;">Virtual Try-On</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="try-on-container">
+        <h1 class="section-title">Virtual Try-On Studio</h1>
+
+        <div class="try-on-workspace">
+            <!-- Controls -->
+            <div class="controls-panel">
+                <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                    <i data-lucide="upload-cloud" size="48" style="margin-bottom: 1rem; color: var(--primary);"></i>
+                    <h3>Upload Your Photo</h3>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Click to browse</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div>
+                    <h3>Select Hoodie</h3>
+                    <div class="hoodie-selector">
+                        <div class="hoodie-option active"
+                            onclick="selectHoodie('https://pngimg.com/uploads/hoodie/hoodie_PNG47.png')">
+                            <img src="https://pngimg.com/uploads/hoodie/hoodie_PNG47.png" alt="Black"
+                                style="width: 100%;">
+                        </div>
+                        <div class="hoodie-option"
+                            onclick="selectHoodie('https://pngimg.com/uploads/hoodie/hoodie_PNG14.png')">
+                            <img src="https://pngimg.com/uploads/hoodie/hoodie_PNG14.png" alt="Gray"
+                                style="width: 100%;">
+                        </div>
+                        <div class="hoodie-option"
+                            onclick="selectHoodie('https://pngimg.com/uploads/hoodie/hoodie_PNG42.png')">
+                            <img src="https://pngimg.com/uploads/hoodie/hoodie_PNG42.png" alt="Red"
+                                style="width: 100%;">
+                        </div>
+                        <div class="hoodie-option"
+                            onclick="selectHoodie('https://pngimg.com/uploads/hoodie/hoodie_PNG12.png')">
+                            <img src="https://pngimg.com/uploads/hoodie/hoodie_PNG12.png" alt="Blue"
+                                style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canvas -->
+            <div class="canvas-area" id="canvasArea">
+                <div id="placeholderText" style="text-align: center; color: var(--gray);">
+                    <i data-lucide="camera" size="48" style="margin-bottom: 1rem;"></i>
+                    <p>Upload a photo to start</p>
+                </div>
+                <img id="userImage" style="display: none;">
+                <img id="hoodieOverlay" class="draggable-hoodie"
+                    src="https://pngimg.com/uploads/hoodie/hoodie_PNG47.png" style="display: none;">
+
+                <div class="controls-overlay" id="controlsOverlay" style="display: none;">
+                    <button class="control-btn" onclick="resizeHoodie(1.1)" title="Zoom In"><i
+                            data-lucide="zoom-in"></i></button>
+                    <button class="control-btn" onclick="resizeHoodie(0.9)" title="Zoom Out"><i
+                            data-lucide="zoom-out"></i></button>
+                    <button class="control-btn" onclick="rotateHoodie(15)" title="Rotate Right"><i
+                            data-lucide="rotate-cw"></i></button>
+                    <button class="control-btn" onclick="rotateHoodie(-15)" title="Rotate Left"><i
+                            data-lucide="rotate-ccw"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const fileInput = document.getElementById('fileInput');
+        const userImage = document.getElementById('userImage');
+        const hoodieOverlay = document.getElementById('hoodieOverlay');
+        const placeholderText = document.getElementById('placeholderText');
+        const controlsOverlay = document.getElementById('controlsOverlay');
+
+        let currentScale = 1;
+        let currentRotation = 0;
+
+        // Handle File Upload
+        fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    userImage.src = e.target.result;
+                    userImage.style.display = 'block';
+                    hoodieOverlay.style.display = 'block';
+                    placeholderText.style.display = 'none';
+                    controlsOverlay.style.display = 'flex';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Select Hoodie
+        function selectHoodie(src) {
+            hoodieOverlay.src = src;
+            document.querySelectorAll('.hoodie-option').forEach(opt => opt.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // Resize & Rotate
+        function resizeHoodie(factor) {
+            currentScale *= factor;
+            updateTransform();
+        }
+
+        function rotateHoodie(deg) {
+            currentRotation += deg;
+            updateTransform();
+        }
+
+        function updateTransform() {
+            hoodieOverlay.style.transform = `scale(${currentScale}) rotate(${currentRotation}deg)`;
+        }
+
+        // Drag Functionality
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        hoodieOverlay.addEventListener("mousedown", dragStart);
+        document.addEventListener("mouseup", dragEnd);
+        document.addEventListener("mousemove", drag);
+
+        function dragStart(e) {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            if (e.target === hoodieOverlay) {
+                isDragging = true;
+            }
+        }
+
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                xOffset = currentX;
+                yOffset = currentY;
+                hoodieOverlay.style.left = currentX + "px";
+                hoodieOverlay.style.top = currentY + "px";
+            }
+        }
+    </script>
+</body>
+
+</html>

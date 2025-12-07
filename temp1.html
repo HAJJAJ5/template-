@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Fixed Background Parallax Template - Beautiful scrolling effects">
+    <meta name="keywords" content="template, html, css, parallax, fixed background, demo">
+    <meta name="author" content="Ahmad">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="color-scheme" content="light dark">
+    <meta property="og:title" content="Fixed Background Template">
+    <meta property="og:description" content="Beautiful parallax scrolling template with fixed backgrounds">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://picsum.photos/1200/630">
+    <title>Fixed Background Template</title>
+    <link rel="icon" type="image/png" href="https://picsum.photos/32/32">
+
+    <!-- Optimized loading: preconnect to Google fonts, preload stylesheet (async), crossorigin for fonts.gstatic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Preload Google Fonts stylesheet and swap to stylesheet on load (keeps render-blocking minimal).
+    The URL already includes &display=swap to ensure font-display: swap. -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </noscript>
+
+    <!-- Font Awesome: preload the CSS to avoid blocking, keep integrity & crossorigin -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'"
+        integrity="sha512-CNcTK9WM9nFerM0N0fQaKpW2ZyiVO61sMgzwnj4zv3Hnzk0iYC5NTT5M/Wex73J8gJfXLsfMgsV6I9p9FoF7p4"
+        crossorigin="anonymous">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+            integrity="sha512-CNcTK9WM9nFerM0N0fQaKpW2ZyiVO61sMgzwnj4zv3Hnzk0iYC5NTT5M/Wex73J8gJfXLsfMgsV6I9p9FoF7p4"
+            crossorigin="anonymous">
+    </noscript>
+    <link rel="stylesheet" href="temp1.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Three.js Library for 3D Graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <!-- Hero Section -->
+    <div class="img">
+        <img src="https://picsum.photos/seed/hero/2560/1440" srcset="https://picsum.photos/seed/hero/640/360 640w,
+                    https://picsum.photos/seed/hero/1280/720 1280w,
+                    https://picsum.photos/seed/hero/1920/1080 1920w,
+                    https://picsum.photos/seed/hero/2560/1440 2560w" sizes="100vw" width="2560" height="1440"
+            alt="Hero image - Beautiful landscape" loading="eager" decoding="async"
+            style="width:100vw; height:100vh; object-fit:cover; display:block;">
+        <div class="h1">
+            <h1>Fixed Background Template</h1>
+            <p>Scroll down to see the 3D cube and parallax effects</p>
+        </div>
+    </div>
+
+    <!-- 3D Cube Section -->
+    <div class="cube-section">
+        <div class="cube-label">3D Cube - Scroll to Rotate</div>
+        <div id="canvas-container"></div>
+        <div class="cube-instruction">Scroll up and down to rotate the cube</div>
+    </div>
+
+    <!-- 3D Backpack Section -->
+    <div class="backpack-section">
+        <div class="backpack-label">Premium Backpack</div>
+        <div id="backpack-container"></div>
+        <div class="backpack-instruction">Scroll to rotate and explore the 3D backpack design</div>
+    </div>
+
+    <!-- Feature Boxes Grid -->
+    <div class="icons">
+        <!-- Feature One -->
+        <div class="iconbox fixed-bg" style="background-image: url('https://picsum.photos/id/1018/1200/800');">
+            <img class="feature-icon" src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/star.svg"
+                alt="Star icon">
+            <h3>Feature One</h3>
+            <p>Experience stunning fixed background effects that create depth and visual interest.</p>
+        </div>
+
+        <!-- Feature Two -->
+        <div class="secbox fixed-bg" style="background-image: url('https://picsum.photos/id/1015/1200/800');">
+            <img class="feature-icon" src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/heart.svg"
+                alt="Heart icon">
+            <h3>Feature Two</h3>
+            <p>Beautiful parallax scrolling that engages your visitors and keeps them scrolling.</p>
+        </div>
+
+        <!-- Feature Three -->
+        <div class="thirdbox fixed-bg" style="background-image: url('https://picsum.photos/id/1019/1200/800');">
+            <img class="feature-icon" src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/zap.svg"
+                alt="Lightning icon">
+            <h3>Feature Three</h3>
+            <p>Fast loading and optimized performance for the best user experience.</p>
+        </div>
+
+        <!-- Feature Four -->
+        <div class="thirdbox fixed-bg" style="background-image: url('https://picsum.photos/id/1016/1200/800');">
+            <img class="feature-icon" src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/award.svg"
+                alt="Award icon">
+            <h3>Feature Four</h3>
+            <p>Premium quality design that looks great on all devices and screen sizes.</p>
+        </div>
+    </div>
+
+    <!-- Full Width Section -->
+    <div class="underof them fixed-bg" style="background-image: url('https://picsum.photos/id/1025/1200/800');">
+        <img class="feature-icon" src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/globe.svg"
+            alt="Globe icon">
+        <h3>Explore the World</h3>
+        <p>Discover amazing places and create unforgettable memories with our stunning visual experience.</p>
+    </div>
+
+    <!-- Content Section -->
+    <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis et magni voluptates obcaecati,
+        amet id iusto laudantium quibusdam a, exercitationem tempora fuga molestiae temporibus eos, eius
+        eligendi fugiat illo ex. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+        doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+        architecto beatae vitae dicta sunt explicabo.
+    </p>
+
+    <!-- New Section -->
+    <div class="new-section fixed-bg" style="background-image: url('https://picsum.photos/id/1036/1200/800');">
+        <img class="feature-icon" src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/aperture.svg"
+            alt="Aperture icon">
+        <h3>Capture the Moment</h3>
+        <p>Every scroll reveals a new perspective. This fixed background stays in place while content flows over it,
+            creating a mesmerizing parallax effect.</p>
+    </div>
+
+    <!-- ========================================
+         STEP-BY-STEP EXAMPLE: Your New Section
+         ======================================== -->
+
+    <!-- STEP 1: Create a <div> container -->
+    <!-- STEP 2: Add TWO classes: "my-new-section" (for styling) + "fixed-bg" (for parallax) -->
+    <!-- STEP 3: Add inline style with background-image URL -->
+    <div class="my-new-section fixed-bg" style="background-image: url('https://picsum.photos/id/1050/1200/800');">
+
+        <!-- STEP 4: Add an icon (optional but looks nice) -->
+        <img class="feature-icon" src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/code.svg"
+            alt="Code icon">
+
+        <!-- STEP 5: Add your heading -->
+        <h3>Learn By Doing</h3>
+
+        <!-- STEP 6: Add your description text -->
+        <p>This is your practice section! Notice how the background stays fixed while you scroll. Try creating your own!
+        </p>
+    </div>
+
+    <!-- 3D Objects Script with Smooth Transitions -->
+    <script>
+        // ===== CONFIGURATION =====
+        // To use a real 3D model (.glb), you have two options:
+        // Option 1: Use CDN with dynamic import (requires modern browser)
+        // Option 2: Use a bundler (Webpack/Vite) with Three.js modules
+        // For now, we use procedural 3D objects which work without external files.
+        
+        const USE_GLTF_MODEL = false; // Set to true if you have a backpack.glb file
+        const GLTF_MODEL_PATH = './models/backpack.glb'; // Path to your model file
+        
+        // ===== CUBE SECTION =====
+        const cubeContainer = document.getElementById('canvas-container');
+        const cubeScene = new THREE.Scene();
+        const cubeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const cubeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        cubeRenderer.setSize(window.innerWidth, window.innerHeight);
+        cubeRenderer.setClearColor(0x1a1a2e, 1);
+        cubeContainer.appendChild(cubeRenderer.domElement);
+        
+        cubeCamera.position.z = 3;
+        
+        // Create cube with colorful faces
+        const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
+        const cubeMaterials = [
+            new THREE.MeshPhongMaterial({ color: 0xff6b6b }), // Red
+            new THREE.MeshPhongMaterial({ color: 0x4ecdc4 }), // Teal
+            new THREE.MeshPhongMaterial({ color: 0xffe66d }), // Yellow
+            new THREE.MeshPhongMaterial({ color: 0x95e1d3 }), // Mint
+            new THREE.MeshPhongMaterial({ color: 0xf38181 }), // Pink
+            new THREE.MeshPhongMaterial({ color: 0xaa96da })  // Purple
+        ];
+        
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
+        cubeScene.add(cube);
+        
+        // Cube lighting
+        const cubeLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+        cubeLight1.position.set(5, 5, 5);
+        cubeScene.add(cubeLight1);
+        
+        const cubeLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+        cubeLight2.position.set(-5, -5, -5);
+        cubeScene.add(cubeLight2);
+        
+        const cubeAmbient = new THREE.AmbientLight(0xffffff, 0.4);
+        cubeScene.add(cubeAmbient);
+        
+        // ===== BACKPACK 3D SECTION =====
+        const backpackContainer = document.getElementById('backpack-container');
+        const backpackScene = new THREE.Scene();
+        const backpackCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const backpackRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        backpackRenderer.setSize(window.innerWidth, window.innerHeight);
+        backpackRenderer.setClearColor(0x000000, 0);
+        backpackContainer.appendChild(backpackRenderer.domElement);
+        
+        backpackCamera.position.z = 4;
+        
+        // Function to load GLTF model (optional)
+        async function loadBackpackModel() {
+            if (!window.GLTFLoader) {
+                console.warn('GLTFLoader not available. Using procedural backpack.');
+                return null;
+            }
+            try {
+                const response = await fetch(GLTF_MODEL_PATH);
+                if (!response.ok) {
+                    console.warn(`Model file not found at ${GLTF_MODEL_PATH}. Using procedural backpack.`);
+                    return null;
+                }
+                const loader = new window.THREE.GLTFLoader();
+                return new Promise((resolve, reject) => {
+                    loader.load(GLTF_MODEL_PATH, resolve, undefined, reject);
+                });
+            } catch (error) {
+                console.warn('Error loading GLTF model:', error);
+                return null;
+            }
+        }
+        
+        // Create procedural backpack (used by default)
+        function createProceduralBackpack() {
+            // Create backpack - main body (rectangular prism)
+            const backpackBodyGeometry = new THREE.BoxGeometry(1.2, 1.6, 0.7);
+            const backpackBodyMaterial = new THREE.MeshPhongMaterial({
+                color: 0x2a2a2a,
+                shininess: 50,
+                wireframe: false
+            });
+            const backpackBody = new THREE.Mesh(backpackBodyGeometry, backpackBodyMaterial);
+            backpackBody.position.y = -0.1;
+            
+            // Backpack side pocket
+            const pocketGeometry = new THREE.BoxGeometry(0.3, 0.8, 0.5);
+            const pocketMaterial = new THREE.MeshPhongMaterial({
+                color: 0x1f1f1f,
+                shininess: 30
+            });
+            const pocket = new THREE.Mesh(pocketGeometry, pocketMaterial);
+            pocket.position.set(0.5, -0.2, 0.2);
+            
+            // Backpack top handle
+            const handleGeometry = new THREE.BoxGeometry(0.15, 0.6, 0.1);
+            const handleMaterial = new THREE.MeshPhongMaterial({
+                color: 0x333333,
+                shininess: 40
+            });
+            const handle = new THREE.Mesh(handleGeometry, handleMaterial);
+            handle.position.set(-0.4, 0.75, 0);
+            
+            // Backpack straps (left)
+            const strapLeftGeometry = new THREE.BoxGeometry(0.08, 0.8, 0.05);
+            const strapMaterial = new THREE.MeshPhongMaterial({
+                color: 0x1a1a1a,
+                shininess: 35
+            });
+            const strapLeft = new THREE.Mesh(strapLeftGeometry, strapMaterial);
+            strapLeft.position.set(-0.35, 0.2, 0.35);
+            
+            // Backpack straps (right)
+            const strapRight = new THREE.Mesh(strapLeftGeometry, strapMaterial);
+            strapRight.position.set(0.35, 0.2, 0.35);
+            
+            // Backpack zipper highlight
+            const zipperGeometry = new THREE.BoxGeometry(0.05, 1.4, 0.02);
+            const zipperMaterial = new THREE.MeshPhongMaterial({
+                color: 0x555555,
+                shininess: 80
+            });
+            const zipper = new THREE.Mesh(zipperGeometry, zipperMaterial);
+            zipper.position.set(0, 0, 0.36);
+            
+            const backpack = new THREE.Group();
+            backpack.add(backpackBody);
+            backpack.add(pocket);
+            backpack.add(handle);
+            backpack.add(strapLeft);
+            backpack.add(strapRight);
+            backpack.add(zipper);
+            return backpack;
+        }
+        
+        // Initialize backpack (procedural or GLTF)
+        let backpack = null;
+        
+        async function initializeBackpack() {
+            if (USE_GLTF_MODEL) {
+                const gltf = await loadBackpackModel();
+                if (gltf) {
+                    backpack = gltf.scene;
+                    backpack.position.set(0, -0.5, 0);
+                    backpack.scale.set(1.5, 1.5, 1.5);
+                } else {
+                    backpack = createProceduralBackpack();
+                }
+            } else {
+                backpack = createProceduralBackpack();
+            }
+            backpackScene.add(backpack);
+        }
+        
+        initializeBackpack();
+        
+        // ===== BACKPACK LIGHTING =====
+        const backpackLight1 = new THREE.DirectionalLight(0xffffff, 1);
+        backpackLight1.position.set(6, 6, 6);
+        backpackScene.add(backpackLight1);
+        
+        const backpackLight2 = new THREE.DirectionalLight(0x888888, 0.6);
+        backpackLight2.position.set(-6, -4, -6);
+        backpackScene.add(backpackLight2);
+        
+        const backpackAmbient = new THREE.AmbientLight(0xffffff, 0.6);
+        backpackScene.add(backpackAmbient);
+        
+        // ===== SCROLL TRACKING WITH SMOOTH EASING =====
+        let scrollY = 0;
+        let targetRotationX = 0;
+        let targetRotationY = 0;
+        let currentRotationX = 0;
+        let currentRotationY = 0;
+        
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+            targetRotationX = (scrollY * 0.004);
+            targetRotationY = (scrollY * 0.007);
+        });
+        
+        // Enhanced smooth easing function (more responsive)
+        function easeRotation(current, target) {
+            return current + (target - current) * 0.15; // 15% for more active feel
+        }
+        
+        // ===== ANIMATION LOOPS =====
+        function animateCube() {
+            requestAnimationFrame(animateCube);
+            
+            // Smooth transition for cube
+            currentRotationX = easeRotation(currentRotationX, targetRotationX);
+            currentRotationY = easeRotation(currentRotationY, targetRotationY);
+            
+            cube.rotation.x = currentRotationX;
+            cube.rotation.y = currentRotationY;
+            
+            cubeRenderer.render(cubeScene, cubeCamera);
+        }
+        
+        function animateBackpack() {
+            requestAnimationFrame(animateBackpack);
+            
+            if (backpack) {
+                backpack.rotation.x = currentRotationX;
+                backpack.rotation.y = currentRotationY;
+                backpack.position.y = Math.sin(Date.now() * 0.0005) * 0.1 - 0.5;
+            }
+            
+            backpackRenderer.render(backpackScene, backpackCamera);
+        }
+        
+        animateCube();
+        animateBackpack();
+        
+        // ===== HANDLE WINDOW RESIZE =====
+        window.addEventListener('resize', () => {
+            // Cube resize
+            cubeCamera.aspect = window.innerWidth / window.innerHeight;
+            cubeCamera.updateProjectionMatrix();
+            cubeRenderer.setSize(window.innerWidth, window.innerHeight);
+            
+            // Backpack resize
+            backpackCamera.aspect = window.innerWidth / window.innerHeight;
+            backpackCamera.updateProjectionMatrix();
+            backpackRenderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+const loader = new THREE.GLTFLoader();
+
+loader.load('/models/body.glb', function (gltf) {
+
+    const model = gltf.scene;
+    model.scale.set(1, 1, 1);   // تكبير/تصغير
+    model.position.set(0, 0, 0); // موقع الجسم
+
+    scene.add(model);
+
+}, undefined, function (error) {
+    console.error('Error loading model:', error);
+});
